@@ -1,8 +1,8 @@
-﻿namespace ReliableKafkaProducer
+﻿namespace ReliableKafka.Producers.Confluent
 {
     using System;
     using System.Threading.Tasks;
-    using Confluent.Kafka;
+    using global::Confluent.Kafka;
 
     public static class Program
     {

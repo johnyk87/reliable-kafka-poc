@@ -1,4 +1,4 @@
-﻿namespace ReliableKafkaConsumer
+﻿namespace ReliableKafka.Processor
 {
     using System.Collections.Concurrent;
     using System.Threading.Tasks;
