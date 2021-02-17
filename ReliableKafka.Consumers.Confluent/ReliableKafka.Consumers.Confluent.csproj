@@ -11,7 +11,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\ReliableKafka.Processor\ReliableKafka.Processor.csproj" />
+      <ProjectReference Include="..\ReliableKafka.Shared\ReliableKafka.Shared.csproj" />
     </ItemGroup>
 
 </Project>

@@ -1,4 +1,4 @@
-﻿namespace ReliableKafka.Processor
+﻿namespace ReliableKafka.Shared
 {
     using System;
     using System.Threading;
@@ -18,7 +18,7 @@
             this.totalMessages = 0;
         }
 
-        public async Task ProcessAsync(string id, string message, CancellationToken cancellationToken)
+        public async Task ProcessAsync(int id, MyMessage message, CancellationToken cancellationToken)
         {
             try
             {
@@ -28,7 +28,7 @@
                 // require more complex management of processed messages.
                 if (await this.IsProcessed(id))
                 {
-                    Console.WriteLine($"Message \"{id}\" has already been processed (total = {totalMessages}).");
+                    Console.WriteLine($"Message \"{id}\" has already been processed (total = {this.totalMessages}).");
                     return;
                 }
 
@@ -42,7 +42,7 @@
             }
         }
 
-        private async Task<bool> IsProcessed(string id)
+        private async Task<bool> IsProcessed(int id)
         {
             var currentValue = await this.repository.GetAsync(id);
 
@@ -51,7 +51,7 @@
             return currentValue != null;
         }
 
-        private async Task ProcessNewAsync(string id, string message)
+        private async Task ProcessNewAsync(int id, MyMessage message)
         {
             ThrowRandomError("3");
 
@@ -60,25 +60,25 @@
             ThrowRandomError("4");
 
             await this.repository.UpsertAsync(id, message);
-            Interlocked.Increment(ref totalMessages);
-            Console.WriteLine($"Message \"{id}\" received with value \"{message}\" (total = {totalMessages}).");
+            Interlocked.Increment(ref this.totalMessages);
+            Console.WriteLine($"Message \"{id}\" received with value \"{message}\" (total = {this.totalMessages}).");
 
             ThrowRandomError("5");
         }
 
-        private static void Validate(string id)
+        private static void Validate(int id)
         {
-            if (!int.TryParse(id, out var parsedId) || parsedId % 1000 == 0)
+            if (id % 1000 == 0)
             {
                 throw new ValidationException($"I don't like id {id}!");
             }
         }
 
-        private static void ThrowRandomError(string message = "somewhere", double percentage = 0.001)
+        private static void ThrowRandomError(string info = "somewhere", double percentage = 0.001)
         {
             if (Random.NextDouble() < percentage)
             {
-                throw new Exception("Puff " + message);
+                throw new Exception("Puff " + info);
             }
         }
     }

@@ -24,7 +24,7 @@
                 await Task.Yield();
 
                 var consumeResult = this.consumer.Consume(cancellationToken);
-                if (consumeResult.Message == null)
+                if (consumeResult?.Message == null)
                 {
                     return;
                 }

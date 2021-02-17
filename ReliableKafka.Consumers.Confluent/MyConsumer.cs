@@ -4,21 +4,21 @@
     using System.Threading;
     using System.Threading.Tasks;
     using global::Confluent.Kafka;
-    using ReliableKafka.Processor;
+    using ReliableKafka.Shared;
 
-    public class MyConsumer : AtLeastOnceConsumer<string, string>
+    public class MyConsumer : AtLeastOnceConsumer<int, MyMessage>
     {
         private readonly MessageProcessor processor;
 
         public MyConsumer(
-            IConsumer<string, string> consumer,
+            IConsumer<int, MyMessage> consumer,
             MessageProcessor processor)
             : base(consumer)
         {
             this.processor = processor;
         }
 
-        protected override Task ProcessAsync(Message<string, string> message, CancellationToken cancellationToken)
+        protected override Task ProcessAsync(Message<int, MyMessage> message, CancellationToken cancellationToken)
         {
             return this.processor.ProcessAsync(message.Key, message.Value, cancellationToken);
         }
@@ -26,6 +26,16 @@
         protected override Task OnConsumeErrorAsync(Exception exception, CancellationToken cancellationToken)
         {
             Console.WriteLine("Consume error:" + exception);
+
+            if (exception is ConsumeException consumeException)
+            {
+                if (consumeException.Error.Code == ErrorCode.Local_KeyDeserialization ||
+                    consumeException.Error.Code == ErrorCode.Local_ValueDeserialization)
+                {
+                    // Now what?
+                    Console.WriteLine("Deserialization error.");
+                }
+            }
 
             // Wait a bit before next attempt.
             return Task.Delay(100, cancellationToken);

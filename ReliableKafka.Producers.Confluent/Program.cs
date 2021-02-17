@@ -3,6 +3,7 @@
     using System;
     using System.Threading.Tasks;
     using global::Confluent.Kafka;
+    using ReliableKafka.Shared;
 
     public static class Program
     {
@@ -18,17 +19,19 @@
 
             const string Topic = "resilience-tests";
 
-            var producer = new ProducerBuilder<string, string>(config)
-                .SetKeySerializer(Serializers.Utf8)
-                .SetValueSerializer(Serializers.Utf8)
+            var producer = new ProducerBuilder<int, MyMessage>(config)
+                .SetValueSerializer(new JsonSerializer<MyMessage>())
                 .Build();
 
             for (var index = 0; index < 10000; ++index)
             {
-                var message = new Message<string, string>
+                var message = new Message<int, MyMessage>
                 {
-                    Key = index.ToString(),
-                    Value = Guid.NewGuid().ToString(),
+                    Key = index,
+                    Value = new MyMessage
+                    {
+                        Value = Guid.NewGuid().ToString(),
+                    },
                 };
 
                 await producer.ProduceAsync(Topic, message);

@@ -9,14 +9,7 @@ services:
     environment:
       KAFKA_ADVERTISED_HOST_NAME: 127.0.0.1
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-    networks:
-      - reliablekafka-net
 
   zookeeper:
     image: zookeeper:3.4.13
     container_name: zookeeper
-    networks:
-      - reliablekafka-net
-
-networks:
-  reliablekafka-net:

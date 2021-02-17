@@ -6,7 +6,7 @@
     using System.Threading.Tasks;
     using global::Confluent.Kafka;
     using Microsoft.Extensions.Hosting;
-    using ReliableKafka.Processor;
+    using ReliableKafka.Shared;
 
     public class ConsumerService : BackgroundService
     {
@@ -21,7 +21,7 @@
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            var kafkaConsumer = default(IConsumer<string, string>);
+            var kafkaConsumer = default(IConsumer<int, MyMessage>);
 
             try
             {
@@ -39,9 +39,8 @@
                     AutoOffsetReset = AutoOffsetReset.Earliest,
                 };
 
-                kafkaConsumer = new ConsumerBuilder<string, string>(config)
-                    .SetKeyDeserializer(Deserializers.Utf8)
-                    .SetValueDeserializer(Deserializers.Utf8)
+                kafkaConsumer = new ConsumerBuilder<int, MyMessage>(config)
+                    .SetValueDeserializer(new JsonSerializer<MyMessage>())
                     .SetPartitionsAssignedHandler(OnPartitionAssigned)
                     .SetPartitionsRevokedHandler(OnPartitionRevoked)
                     .Build();
@@ -74,12 +73,12 @@
             }
         }
 
-        private static void OnPartitionAssigned(IConsumer<string, string> arg1, List<TopicPartition> arg2)
+        private static void OnPartitionAssigned(IConsumer<int, MyMessage> arg1, List<TopicPartition> arg2)
         {
             Console.WriteLine("Partitions assigned: " + string.Join(',', arg2));
         }
 
-        private static void OnPartitionRevoked(IConsumer<string, string> arg1, List<TopicPartitionOffset> arg2)
+        private static void OnPartitionRevoked(IConsumer<int, MyMessage> arg1, List<TopicPartitionOffset> arg2)
         {
             Console.WriteLine("Partitions revoked: " + string.Join(',', arg2));
         }

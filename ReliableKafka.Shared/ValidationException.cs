@@ -1,4 +1,4 @@
-﻿namespace ReliableKafka.Processor
+﻿namespace ReliableKafka.Shared
 {
     using System;
     using System.Runtime.Serialization;

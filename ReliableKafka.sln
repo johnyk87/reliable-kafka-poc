@@ -4,7 +4,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReliableKafka.Consumers.Con
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReliableKafka.Producers.Confluent", "ReliableKafka.Producers.Confluent\ReliableKafka.Producers.Confluent.csproj", "{4CEB0D99-3113-40FF-AC76-59C5C6CA8801}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReliableKafka.Processor", "ReliableKafka.Processor\ReliableKafka.Processor.csproj", "{9EA79A78-ED8B-446B-84CB-AF492014292E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReliableKafka.Shared", "ReliableKafka.Shared\ReliableKafka.Shared.csproj", "{9EA79A78-ED8B-446B-84CB-AF492014292E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
