@@ -11,7 +11,9 @@
             var config = new ProducerConfig
             {
                 BootstrapServers = "localhost:9092",
-                Acks = Acks.All,
+                // In order to ensure idempotence, this setting will change the defaults of other
+                // settings as well, like Acks.All and maxRetries = int.MaxValue.
+                EnableIdempotence = true,
             };
 
             const string Topic = "resilience-tests";
@@ -29,7 +31,6 @@
                     Value = Guid.NewGuid().ToString(),
                 };
 
-                // TODO: create some sort of reliable scenario
                 await producer.ProduceAsync(Topic, message);
                 Console.WriteLine($"Message {index} produced");
             }
