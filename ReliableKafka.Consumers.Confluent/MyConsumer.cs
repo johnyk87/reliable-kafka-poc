@@ -25,15 +25,14 @@
 
         protected override Task OnConsumeErrorAsync(Exception exception, CancellationToken cancellationToken)
         {
-            Console.WriteLine("Consume error:" + exception);
+            Console.WriteLine("Consume error: " + exception);
 
             if (exception is ConsumeException consumeException)
             {
-                if (consumeException.Error.Code == ErrorCode.Local_KeyDeserialization ||
-                    consumeException.Error.Code == ErrorCode.Local_ValueDeserialization)
+                if (consumeException.ConsumerRecord?.Message != null)
                 {
                     // Now what?
-                    Console.WriteLine("Deserialization error.");
+                    Console.WriteLine("A message was rejected by the consumer: " + consumeException.ConsumerRecord.TopicPartitionOffset + ".");
                 }
             }
 
