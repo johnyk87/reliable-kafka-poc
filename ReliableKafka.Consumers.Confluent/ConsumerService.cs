@@ -21,6 +21,8 @@
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
+            var kafkaConsumer = default(IConsumer<string, string>);
+
             try
             {
                 var config = new ConsumerConfig
@@ -37,7 +39,7 @@
                     AutoOffsetReset = AutoOffsetReset.Earliest,
                 };
 
-                var kafkaConsumer = new ConsumerBuilder<string, string>(config)
+                kafkaConsumer = new ConsumerBuilder<string, string>(config)
                     .SetKeyDeserializer(Deserializers.Utf8)
                     .SetValueDeserializer(Deserializers.Utf8)
                     .SetPartitionsAssignedHandler(OnPartitionAssigned)
@@ -57,7 +59,14 @@
             }
             catch (OperationCanceledException)
             {
-                // Ignore canceled exception.
+                try
+                {
+                    kafkaConsumer?.Close();
+                }
+                catch
+                {
+                    // Ignore close exceptions.
+                }
             }
             catch (Exception ex)
             {
