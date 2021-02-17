@@ -20,30 +20,25 @@
 
         public async Task ProcessAsync(string id, string message, CancellationToken cancellationToken)
         {
-            // Introduce 1% change of failure before processing.
-            if (Random.Next(0, 100) == 0)
+            try
             {
-                throw new Exception("Puff before");
+                ThrowRandomError("1");
+
+                // This is a simple way to demonstrate an exactly once processing. A real scenario may
+                // require more complex management of processed messages.
+                if (await this.IsProcessed(id))
+                {
+                    Console.WriteLine($"Message \"{id}\" has already been processed (total = {totalMessages}).");
+                    return;
+                }
+
+                await this.ProcessNewAsync(id, message);
             }
-
-            // This is a simple way to demonstrate an exactly once processing. A real scenario may
-            // require more complex management of processed messages.
-            if (await this.IsProcessed(id))
+            catch (ValidationException ex)
             {
-                Console.WriteLine($"Message \"{id}\" has already been processed (total = {totalMessages}).");
-                return;
-            }
+                ThrowRandomError("on validaton exception", 0.5);
 
-            cancellationToken.ThrowIfCancellationRequested();
-
-            await this.repository.UpsertAsync(id, message);
-            Interlocked.Increment(ref totalMessages);
-            Console.WriteLine($"Message \"{id}\" received with value \"{message}\" (total = {totalMessages}).");
-
-            // Introduce 1% change of failure after processing.
-            if (Random.Next(0, 100) == 0)
-            {
-                throw new Exception("Puff after");
+                Console.WriteLine("Validation error: " + ex.Message);
             }
         }
 
@@ -51,7 +46,40 @@
         {
             var currentValue = await this.repository.GetAsync(id);
 
+            ThrowRandomError("2");
+
             return currentValue != null;
+        }
+
+        private async Task ProcessNewAsync(string id, string message)
+        {
+            ThrowRandomError("3");
+
+            Validate(id);
+
+            ThrowRandomError("4");
+
+            await this.repository.UpsertAsync(id, message);
+            Interlocked.Increment(ref totalMessages);
+            Console.WriteLine($"Message \"{id}\" received with value \"{message}\" (total = {totalMessages}).");
+
+            ThrowRandomError("5");
+        }
+
+        private static void Validate(string id)
+        {
+            if (!int.TryParse(id, out var parsedId) || parsedId % 1000 == 0)
+            {
+                throw new ValidationException($"I don't like id {id}!");
+            }
+        }
+
+        private static void ThrowRandomError(string message = "somewhere", double percentage = 0.001)
+        {
+            if (Random.NextDouble() < percentage)
+            {
+                throw new Exception("Puff " + message);
+            }
         }
     }
 }
