@@ -6,6 +6,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReliableKafka.Producers.Con
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReliableKafka.Shared", "ReliableKafka.Shared\ReliableKafka.Shared.csproj", "{9EA79A78-ED8B-446B-84CB-AF492014292E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReliableKafka.Consumers.KafkaFlow", "ReliableKafka.Consumers.KafkaFlow\ReliableKafka.Consumers.KafkaFlow.csproj", "{6DEE7025-05B7-4831-9DD5-F0728E82250C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -24,5 +26,9 @@ Global
 		{9EA79A78-ED8B-446B-84CB-AF492014292E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9EA79A78-ED8B-446B-84CB-AF492014292E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9EA79A78-ED8B-446B-84CB-AF492014292E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6DEE7025-05B7-4831-9DD5-F0728E82250C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6DEE7025-05B7-4831-9DD5-F0728E82250C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6DEE7025-05B7-4831-9DD5-F0728E82250C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6DEE7025-05B7-4831-9DD5-F0728E82250C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

@@ -42,7 +42,7 @@
 
         protected override Task OnProcessErrorAsync(Exception exception, CancellationToken cancellationToken)
         {
-            Console.WriteLine("Process error:" + exception);
+            Console.WriteLine("Process error: " + exception);
 
             // Wait a bit before next attempt.
             return Task.Delay(100, cancellationToken);
